@@ -1,5 +1,19 @@
 # finradio
 
+This is an initial prototype of the FinRadio app. Currently I'm interested in making a POC of the basic functions: learning how to tune the SDR, change the frequency, change the volume, explore software options, etc.
+
+
+## Structure
+
+Currently I'm using a modified version of the `rtl_fm` program called `rtl_udp` that provides a very simple protocol over UDP to change the tuner frequency, and that we can extend to send extra commands if we need to.
+
+The sound is played through the audio out.
+
+Another option I explored was running `rtl_tcp` to get the audio and control the tuner. See more details about this on <TBD SHOW AND TELL ENTRY>
+
+Since I currently don't have integrated with the hardware knobs, I'm controlling the `rtl_udp` program using a simple node app located in [keyreader](./keyreader)
+
+
 ## Running
 
 sudo balena scan
