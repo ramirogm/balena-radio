@@ -1,0 +1,3 @@
+[submodule "sysrun__rtl-sdr"]
+	path = sysrun__rtl-sdr
+	url = git@github.com:ramirogm/sysrun__rtl-sdr.git

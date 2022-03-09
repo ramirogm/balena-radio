@@ -1,0 +1,120 @@
+# see more about dockerfile templates here: https://www.balena.io/docs/learn/develop/dockerfile/#dockerfile-templates
+# and about balena base images here: https://www.balena.io/docs/reference/base-images/base-images/
+
+
+# Multiple Architectures:
+    # armv5e
+    # armv6
+    # armv7hf
+    # aarch64
+    # amd64
+    # i386
+# Multiple Distributions:
+    # Debian: stretch (9), buster (10), bullseye (11), bookworm (12) and sid
+    # Alpine: 3.11, 3.12, 3.13, 3.14 and edge
+    # Ubuntu: xenial (16.04), bionic (18.04), focal (20.04), hirsute (21.04) and impish (21.10)
+    # Fedora: 32, 33, 34 and 35
+# Multiple language stacks:
+    # Node.js: 17.4.0, 16.13.2, 14.18.3 and 12.22.9
+    # Python: 3.6.15, 3.7.12, 3.8.12, 3.9.10 and 3.10.2
+    # openJDK: 7-jdk/jre, 8-jdk/jre, 11-jdk/jre and 16-jdk
+    # Golang: 1.17.6 and 1.16.13
+    # Dotnet: 6.0-sdk/runtime/aspnet, 3.1-sdk/runtime/aspnet and 5.0-sdk/runtime/aspnet
+# run and build variants designed for multistage builds.
+# cross-build functionality for building ARM containers on x86.
+# Helpful package installer script called install_packages inspired by minideb.
+
+
+# raspberrypi4-64	aarch64
+
+# Here we can use %%BALENA_MACHINE_NAME%% or a specific name like raspberrypi4-64
+# 
+# FROM balenalib/raspberrypi4-64-ubuntu:latest-build
+FROM balenalib/%%BALENA_MACHINE_NAME%%-ubuntu:latest-build
+
+
+# use `install_packages` if you need to install dependencies,
+# for instance if you need git, just uncomment the line below.
+# RUN install_packages git
+
+# Doing it the old way - probably means it's hardcoded to the dist, while install_packages is not
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		cmake \
+        gcc \
+        libusb-1.0-0-dev \
+        sox
+
+# Defines our working directory in container
+WORKDIR /usr/src/app
+# This will copy all files in our root to the working directory in the container
+# Probably overkill now but we can clean up later
+COPY . ./
+
+
+# Enable udevd so that plugged dynamic hardware devices show up in our container.
+# Copied from the node starter
+ENV UDEV=1
+
+ENV CACHE_BUSTER v.0.0.1
+
+# Alternatives on rtl-sdr
+#
+# This one is the latest version, but it doesn't include the UDP listner patch on rtl_fm
+# https://osmocom.org/projects/rtl-sdr/wiki#Software
+# RUN git clone https://github.com/ramirogm/rtl-sdr.git
+# WORKDIR /usr/src/app/rtl-sdr
+
+# This one does include the UDP listner patch on rtl_fm, but is a fork of an old version
+# RUN git clone https://github.com/sysrun/rtl-sdr.git
+# WORKDIR /usr/src/app/rtl-sdr
+
+# This one is a local clone of the first option + some additions to the "UDP protocol"
+# Local dev
+WORKDIR /usr/src/app/sysrun__rtl
+
+# autoconf didn't work, so we build using cmake
+# RUN autoreconf -i
+# RUN ./configure
+# RUN make
+
+RUN mkdir build
+# WORKDIR /usr/src/app/rtl-sdr/build
+WORKDIR /usr/src/app/sysrun__rtl-sdr/build
+RUN cmake ../ -DINSTALL_UDEV_RULES=ON -DDETACH_KERNEL_DRIVER=ON
+RUN make
+RUN make install
+RUN ldconfig
+
+
+
+RUN echo "***** finished building rtl-sdr *****"
+
+#Disable the DVB-T driver, which would prevent the rtl_sdr tool from accessing the stick
+#(if you want to use it for DVB-T reception later, you should undo this change):
+RUN echo "***** disabling DVB-T driver *****"
+RUN echo -e "\n# for RTL-SDR:\nblacklist dvb_usb_rtl28xxu\n" >> /etc/modprobe.d/blacklist.conf
+
+# CMD rtl_fm -M wbfm -f 102.7M | play -r 32k -t raw -e s -b 16 -c 1 -V1 -
+# CMD rtl_udp -M wbfm -f 102.7M | play -r 32k -t raw -e s -b 16 -c 1 -V1 -
+# CMD rtl_udp -M wbfm -f 102.7M | play -t raw -r 24k -es -b 16 -c 1 -V1 -
+
+# -V1 : Only error messages are shown. These are generated if SoX cannot complete the requested commands.
+# 
+CMD rtl_udp -f 102.7M -W | play -t raw -r 32k -es -b 16 -c 1 -V1 --no-show-progress -
+		# "\t[-W enables WBFM mode (default: off)]\n"
+		# "\t (-N -s 170k -o 4 -A fast -r 32k -l 0 -D)\n"
+
+# Setting 98.3M
+# app prints:
+# Tuned to 98656000 Hz.
+# That's because it has
+	# if (wb_mode) {
+	# 	fm.freqs[0] += 16000;
+	# }
+# so 98656000 - 16000 = 98.640.000
+# from 98.300.000 = 340.000
+# Where do those 340.000 come from?
+# Oh from s = 170k
+# It's variable freq_offset  which is set on the optimal_settings variable
+
+# Sample output: [Logs]    [3/7/2022, 11:27:26 PM] [main] Increasing tuning to: 102700000 [Hz] (central freq: 102360000 [Hz], lower central freq: 103040000 [Hz]) - freq_offset: 340000
