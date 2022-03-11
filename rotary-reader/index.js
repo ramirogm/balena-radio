@@ -2,6 +2,13 @@ const Gpio = require('onoff').Gpio;
 const clk = new Gpio(17, 'in', 'falling', {debounceTimeout: 10});
 const dt = new Gpio(18, 'in', 'falling', {debounceTimeout: 10});
 const sw = new Gpio(22, 'in', 'falling', {debounceTimeout: 10});
+const dgram = require('dgram');
+const { Buffer } = require('buffer');
+
+
+console.log("rotary reader starting");
+
+const clientSocket = dgram.createSocket('udp4');
 
 /*
 RotaryKnob events processing logic that converts into a counter taken from 
@@ -24,6 +31,18 @@ let clkLastState = clk.readSync()
 let dtLastState = dt.readSync()
 let swLastState = sw.readSync()
  
+
+function sendCounterValue() {
+  console.log("Counter ", counter);
+  const message = Buffer.from("[" + counter + "]");
+  clientSocket.send(message, process.env.LISTENER_PORT, process.env.LISTENER_ADDRESS, (err) => {
+    if ( err ) {
+      console.error("Error when sending packet", err)
+    }
+  });
+  
+}
+
 // define functions which will be triggered on pin state changes
 function clkClicked() {
   clkState = clk.readSync();
@@ -31,7 +50,7 @@ function clkClicked() {
 
   if ( clkState == 0 && dtState == 1 ) {
     counter = counter - step;
-    console.log("Counter ", counter);
+    sendCounterValue();
   }
 
 }
@@ -43,7 +62,7 @@ function dtClicked() {
 
   if ( clkState == 1 && dtState == 0 ) {
     counter = counter + step;
-    console.log("Counter ", counter);
+    sendCounterValue();
   }
 
 }
@@ -77,13 +96,13 @@ sw.watch((err, value) => {
 });
 
 
-console.log('Starting');
-
 process.on('SIGINT', _ => {
     dt.unexport();
     clk.unexport();
     sw.unexport();
   });
+
+console.log("rotary reader started");
 
 console.log("Initial clk:", clkLastState);
 console.log("Initial dt:", dtLastState);

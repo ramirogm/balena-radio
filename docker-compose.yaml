@@ -2,9 +2,22 @@ version: '2'
 services:
   radio-player:
     build: ./radio-player
+    privileged: true
     expose:
-      - "6020:6020"
+      - "6020"
+  controller:
+    build: ./controller
+    privileged: true
+    expose:
+      - "8001"
+    environment:
+      - RADIO_HOSTNAME=radio-player
+      - RADIO_PORT=6020
   dial:
     build: ./rotary-reader
+    privileged: true
     ports:
       - "80:80"
+    environment:
+      - LISTENER_ADDRESS=controller
+      - LISTENER_PORT=8001
