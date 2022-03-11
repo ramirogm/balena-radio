@@ -1,0 +1,132 @@
+<mxfile host="app.diagrams.net" modified="2022-03-09T17:20:20.267Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36" etag="_ok8B-8N_WA4NUvNdZhf" version="17.0.0" type="github">
+  <diagram id="eBAYRbaCmWyt2Vs_kIRV" name="Page-1">
+    <mxGraphModel dx="1186" dy="710" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="50" y="350" width="650" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-2" value="&lt;h1&gt;rtl_fm / rtl_udp&lt;/h1&gt;&lt;p&gt;On this option we use a modified version of rtl_fm, called rtl_udp, to perform the demodulation and generation of an audio stream ( instead of an I/Q data stream ) and control the device. The modified version adds a UDP listener similar to what rtl_tcp provides&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="50" y="30" width="260" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-3" value="rtl-sdr&lt;br&gt;USB dongle" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="747" y="500" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-4" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="41WGvHkmBzIe6xqzSiXb-3" edge="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="700" y="530" as="sourcePoint" />
+            <mxPoint x="760" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-5" value="&lt;font style=&quot;font-size: 16px&quot;&gt;rtl_fm&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="370" y="510" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-7" value="USB Port" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="660" y="510" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="41WGvHkmBzIe6xqzSiXb-8" target="41WGvHkmBzIe6xqzSiXb-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-8" value="libusb" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="590" y="510" width="40" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="41WGvHkmBzIe6xqzSiXb-12" target="41WGvHkmBzIe6xqzSiXb-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="440" y="655" />
+              <mxPoint x="460" y="655" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-17" value="commands" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="41WGvHkmBzIe6xqzSiXb-15" vertex="1" connectable="0">
+          <mxGeometry x="0.1" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-12" value="localhost&lt;br&gt;socket" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="350" y="700" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.167;entryY=-0.017;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="41WGvHkmBzIe6xqzSiXb-13" target="41WGvHkmBzIe6xqzSiXb-12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="350" y="500" />
+              <mxPoint x="350" y="699" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-16" value="commands&lt;br&gt;( freq, sample rate,&lt;br&gt;gain, tuning,&lt;br&gt;Demod mode )" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="41WGvHkmBzIe6xqzSiXb-14" vertex="1" connectable="0">
+          <mxGeometry x="0.0039" y="1" relative="1" as="geometry">
+            <mxPoint x="-51" y="55" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w6kh3SIZmjgiA7TKn0yG-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="41WGvHkmBzIe6xqzSiXb-13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="110" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-13" value="fin radio app" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="180" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" parent="1" source="41WGvHkmBzIe6xqzSiXb-21" target="41WGvHkmBzIe6xqzSiXb-25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="210" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-21" value="VOLUME" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="190" y="310" width="60" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;entryX=0.85;entryY=-0.033;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="41WGvHkmBzIe6xqzSiXb-22" target="41WGvHkmBzIe6xqzSiXb-25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="420" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="425" y="410" />
+              <mxPoint x="268" y="410" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-22" value="TUNING" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+          <mxGeometry x="395" y="310" width="60" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-25" value="rotary knob&lt;br&gt;potentiometer I/O" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+          <mxGeometry x="200" y="440" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-26" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn4.iconfinder.com/data/icons/geomicons/32/672411-speaker-volume-128.png" parent="1" vertex="1">
+          <mxGeometry x="130" y="760" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-32" value="raw audio stream" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;" parent="1" source="41WGvHkmBzIe6xqzSiXb-27" target="41WGvHkmBzIe6xqzSiXb-31" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-27" value="Demodulator" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="374" y="570" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;" parent="1" source="41WGvHkmBzIe6xqzSiXb-31" target="41WGvHkmBzIe6xqzSiXb-26" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-31" value="sox play&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="80" y="660" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-36" value="&lt;h1&gt;Notes&lt;/h1&gt;&lt;p&gt;* This works but the &quot;UDP command&quot; add-on was done not on the latest release. Maybe we&#39;re missing some fixes? Also, the add-on is not part of the official project so it may not be very stable&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="460" y="30" width="360" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="w6kh3SIZmjgiA7TKn0yG-2" value="volume&lt;br&gt;control??" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="70" y="480" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="w6kh3SIZmjgiA7TKn0yG-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="w6kh3SIZmjgiA7TKn0yG-4" target="41WGvHkmBzIe6xqzSiXb-27">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="545" />
+              <mxPoint x="480" y="593" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="w6kh3SIZmjgiA7TKn0yG-4" value="I/Q Data" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="515" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="41WGvHkmBzIe6xqzSiXb-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="w6kh3SIZmjgiA7TKn0yG-4" target="41WGvHkmBzIe6xqzSiXb-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
