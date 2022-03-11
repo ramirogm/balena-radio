@@ -70,7 +70,7 @@ ENV CACHE_BUSTER v.0.0.1
 
 # This one is a local clone of the first option + some additions to the "UDP protocol"
 # Local dev
-WORKDIR /usr/src/app/sysrun__rtl
+WORKDIR /usr/src/app/sysrun__rtl-sdr
 
 # autoconf didn't work, so we build using cmake
 # RUN autoreconf -i

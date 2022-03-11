@@ -1,0 +1,10 @@
+version: '2'
+services:
+  radio-player:
+    build: ./radio-player
+    expose:
+      - "6020:6020"
+  dial:
+    build: ./rotary-reader
+    ports:
+      - "80:80"
