@@ -59,9 +59,9 @@ ENV CACHE_BUSTER v.0.0.1
 
 # Alternatives on rtl-sdr
 #
-# This one is the latest version, but it doesn't include the UDP listner patch on rtl_fm
+# This one is a fork of the latest version, but it doesn't include the UDP listner patch on rtl_fm
 # https://osmocom.org/projects/rtl-sdr/wiki#Software
-# RUN git clone https://github.com/ramirogm/rtl-sdr.git
+# RUN git clone https://github.com/ramirogm/osmocon__rtl-sdr.git
 # WORKDIR /usr/src/app/rtl-sdr
 
 # This one does include the UDP listner patch on rtl_fm, but is a fork of an old version
