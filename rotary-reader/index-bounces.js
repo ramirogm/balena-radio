@@ -2,7 +2,7 @@ const Gpio = require('onoff').Gpio;
 const dgram = require('dgram');
 const { Buffer } = require('buffer');
 const { hrtime } = require('process');
-const nodaryEncoder = require('./nodaryEncoder');
+
 
 console.log("rotary reader starting");
 const clkPin = process.env.CLK_GPIO_PIN || 17;
@@ -11,9 +11,10 @@ const swPin = process.env.SW_GPIO_PIN || 22;
 
 console.log(`Pins: CLK: ${clkPin} DT: ${dtPin} SW: ${swPin}`);
 
-const myEncoder = nodaryEncoder(clkPin, dtPin); // Using GPIO17 & GPIO18
-
+const clk = new Gpio(clkPin, 'in', 'falling', {debounceTimeout: 10});
+const dt = new Gpio(dtPin, 'in', 'falling', {debounceTimeout: 10});
 const sw = new Gpio(swPin, 'in', 'falling', {debounceTimeout: 10});
+
 
 const clientSocket = dgram.createSocket('udp4');
 
@@ -33,27 +34,16 @@ https://github.com/fivdi/spi-device
 https://github.com/fivdi/mcp-spi-adc
 */
 
+let step = 5; // linear steps for increasing/decreasing volume
 let paused = false // paused state
 
 let counter = 0;
+let clkLastState = clk.readSync()
+let dtLastState = dt.readSync()
 let swLastState = sw.readSync()
-
-myEncoder.on('rotation', (direction, value) => {
-  if (direction == 'R') {
-    console.log('Encoder rotated right');
-  } else {
-    console.log('Encoder rotated left');
-  }
-  if ( counter != value ) {
-    counter = value;
-    sendCounterValue();
-  }
-});
-
 
 function sendCounterValue() {
   console.log("Counter ", counter);
-  checkSpeed();
   const message = Buffer.from("[" + counter + "]");
   clientSocket.send(message, process.env.LISTENER_PORT, process.env.LISTENER_ADDRESS, (err) => {
     if ( err ) {
@@ -76,12 +66,54 @@ function checkSpeed() {
   }
 }
 
+// define functions which will be triggered on pin state changes
+function clkClicked(value) {
+  console.log('clkClicked');
+  checkSpeed();
+  // clkState = clk.readSync();
+  clkState = value;
+  dtState = dt.readSync();
+
+  if ( clkState == 0 && dtState == 1 ) {
+    counter = counter - step;
+    setImmediate(() => sendCounterValue());
+  }
+}
+ 
+ 
+function dtClicked(value) {
+  console.log('dtClicked');
+  checkSpeed();
+  // dtState = dt.readSync();
+  dtState = value;
+  clkState = clk.readSync();
+
+  if ( clkState == 1 && dtState == 0 ) {
+    counter = counter + step;
+    setImmediate(() => sendCounterValue());
+  }
+}
+ 
 function swClicked() {
   paused = !paused;
   console.log("Paused ", paused);
 }
                  
  
+clk.watch((err, value) => {
+    if (err) {
+      throw err;
+    }
+    // clkClicked(value);
+});
+
+dt.watch((err, value) => {
+    if (err) {
+      throw err;
+    }
+    dtClicked(value);
+});
+
 sw.watch((err, value) => {
     if (err) {
       throw err;
@@ -92,11 +124,15 @@ sw.watch((err, value) => {
 
 
 process.on('SIGINT', _ => {
+    dt.unexport();
+    clk.unexport();
     sw.unexport();
   });
 
 console.log("rotary reader started");
 
+console.log("Initial clk:", clkLastState);
+console.log("Initial dt:", dtLastState);
 console.log("Initial sw:", swLastState);
 console.log("=========================================");
 

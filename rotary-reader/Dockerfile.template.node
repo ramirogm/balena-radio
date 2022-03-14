@@ -1,5 +1,5 @@
 # FROM balenalib/%%BALENA_MACHINE_NAME%%-node:12-buster-build
-FROM balenalib/%%BALENA_MACHINE_NAME%%-node:12-buster-build
+FROM balenalib/%%BALENA_MACHINE_NAME%%-node:16-bullseye-build
 ENV CACHE_BUSTER v.0.0.1
 
 
