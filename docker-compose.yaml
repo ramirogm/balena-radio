@@ -15,7 +15,7 @@ services:
       - RADIO_PORT=6020
       - GREEN_GPIO_PIN=6
       - YELLOW_GPIO_PIN=26
-  dial:
+  rotary-reader:
     build: ./rotary-reader
     privileged: true
     ports:
