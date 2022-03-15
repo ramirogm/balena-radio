@@ -1,0 +1,30 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-node:16-bullseye-build
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN JOBS=MAX npm install --production --unsafe-perm && npm cache verify && rm -rf /tmp/*
+COPY . ./
+ENV UDEV=1
+CMD ["npm", "start"]
+
+# RUN lsmod
+# print lots of info. BUT at build time!
+
+# Running on the container with, say, % balena ssh a4df9e9.local main 
+
+
+# RUN i2cdetect -l
+# root@a4df9e9:/usr/src/app# i2cdetect -l
+# i2c-1   i2c             bcm2835 (i2c@7e804000)                  I2C adapter
+# i2c-11  i2c             i2c@0                                   I2C adapter
+
+# RUN i2cdetect -y 1
+# root@a4df9e9:/usr/src/app# i2cdetect -y 1
+#      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+# 00:                         -- -- -- -- -- -- -- -- 
+# 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+# 20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+# 30: -- -- -- -- -- -- -- -- -- -- -- -- 3c -- -- -- 
+# 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+# 50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+# 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+# 70: -- -- -- -- -- -- -- --                         
