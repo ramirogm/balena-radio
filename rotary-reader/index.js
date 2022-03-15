@@ -11,7 +11,7 @@ const swPin = process.env.SW_GPIO_PIN || 22;
 
 console.log(`Pins: CLK: ${clkPin} DT: ${dtPin} SW: ${swPin}`);
 
-const rotEncoder = nodaryEncoder(clkPin, dtPin); // Using GPIO17 & GPIO18
+const rotEncoder = nodaryEncoder(clkPin, dtPin);
 
 const sw = new Gpio(swPin, 'in', 'falling', {debounceTimeout: 10});
 

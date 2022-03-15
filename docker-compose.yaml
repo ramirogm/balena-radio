@@ -15,9 +15,7 @@ services:
       - RADIO_PORT=6020
       - GREEN_GPIO_PIN=6
       - YELLOW_GPIO_PIN=26
-    labels:
-      io.balena.features.kernel-modules: '1'      
-  # dial:
+  # rotary-reader:
   #   build: ./rotary-reader
   #   privileged: true
   #   ports:
@@ -28,9 +26,9 @@ services:
   #     - CLK_GPIO_PIN=17
   #     - DT_GPIO_PIN=27
   #     - SW_GPIO_PIN=22
-  fbcp:
-    image: balenablocks/fbcp
-    privileged: true
-    environment:
-      - FBCP_DISPLAY=waveshare-st7789vw-hat
-      - BALENA_HOST_CONFIG_hdmi_force_hotplug=1
+  # fbcp:
+  #   image: balenablocks/fbcp
+  #   privileged: true
+  #   environment:
+  #     - FBCP_DISPLAY=waveshare-st7789vw-hat
+  #     - BALENA_HOST_CONFIG_hdmi_force_hotplug=1
