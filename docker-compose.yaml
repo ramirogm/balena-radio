@@ -1,10 +1,10 @@
 version: '2'
 services:
-  # radio-player:
-  #   build: ./radio-player
-  #   privileged: true
-  #   expose:
-  #     - "6020"
+  radio-player:
+    build: ./radio-player
+    privileged: true
+    expose:
+      - "6020"
   controller:
     build: ./controller
     privileged: true
@@ -15,17 +15,16 @@ services:
       - RADIO_PORT=6020
       - GREEN_GPIO_PIN=6
       - YELLOW_GPIO_PIN=26
-  # rotary-reader:
-  #   build: ./rotary-reader
-  #   privileged: true
-  #   ports:
-  #     - "80:80"
-  #   environment: 
-  #     - LISTENER_ADDRESS=controller
-  #     - LISTENER_PORT=8001
-  #     - CLK_GPIO_PIN=17
-  #     - DT_GPIO_PIN=27
-  #     - SW_GPIO_PIN=22
+      - INITIAL_FREQUENCY_MHZ=92.1
+  rotary-reader:
+    build: ./rotary-reader
+    privileged: true
+    environment: 
+      - LISTENER_ADDRESS=controller
+      - LISTENER_PORT=8001
+      - CLK_GPIO_PIN=17
+      - DT_GPIO_PIN=27
+      - SW_GPIO_PIN=22
   # fbcp:
   #   image: balenablocks/fbcp
   #   privileged: true

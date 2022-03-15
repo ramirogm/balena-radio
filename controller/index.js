@@ -1,7 +1,15 @@
 const dgram = require('dgram');
 const Gpio = require('onoff').Gpio;
+const {
+  startDisplay,
+  displayFrequency
+} = require('./display');
 
 console.log("finradio controller starting");
+startDisplay();
+
+const initialFrequencyMhz = parseFloat(process.env.INITIAL_FREQUENCY_MHZ || 102.7);
+
 const yellowPin = process.env.YELLOW_GPIO_PIN || 26;
 const greenPin = process.env.GREEN_GPIO_PIN || 6;
 console.log(`LEDs: YELLOW: ${yellowPin} GREEN: ${greenPin}`);
@@ -47,6 +55,16 @@ function receivedTunerValue(tunerValue) {
     return;
   }
   message[0] = tunerValue < lasTunerValue ? 4 : 5;
+
+  // command: 0
+  // payload = 4 bytes, a frequency as uint
+  // received does:
+  // unsigned int val = 0;
+
+	// for(i=1; i<5; i++) {
+	// 	val = val | ((buf[i]) << ((i-1)*8));
+	// }
+
   lasTunerValue = tunerValue;
   if ( process.env.LOG_LEVEL="trace") {
     console.log(`Sending message ${JSON.stringify(message)} to ${process.env.RADIO_HOSTNAME}:${process.env.RADIO_PORT}`);
@@ -64,12 +82,50 @@ function receivedTunerValue(tunerValue) {
   }
 }
 
-
-console.log("finradio controller started");
 function flashLed(led) {
   led.writeSync(1);
   setTimeout(() => {
     led.writeSync(0);
   }, 10);
 }
+
+
+function intToByteArray(intValue) {
+  // we want to represent the input as a 4-bytes array
+  var byteArray = [0, 0, 0, 0];
+
+  for ( var index = 0; index < byteArray.length; index ++ ) {
+      var byte = intValue & 0xff;
+      byteArray [ index ] = byte;
+      intValue = (intValue - byte) / 256 ;
+  }
+
+  return byteArray;
+};
+
+
+function sendTunerFrequencyToRadio(freqInMhz) {
+  displayFrequency(freqInMhz);
+  const message = Buffer.alloc(5);
+  message[0] = 0; // Means set frequency
+
+  // frequency sent as a value in Hz
+  console.log(`freqInMhz: ${freqInMhz}`);
+  const freqInHz = freqInMhz * 1000000;
+  console.log(`freqInHz: ${freqInHz}`);
+  const freqInHzBytes = intToByteArray(freqInHz);
+  console.log(`freqInHzBytes: ${freqInHzBytes}`);
+  for ( let i = 0; i < 4; i++ ) {
+    message[i+1] = freqInHzBytes[i];
+  }
+  clientSocket.send(message, process.env.RADIO_PORT, process.env.RADIO_HOSTNAME, (err) => {
+    if ( err ) {
+      console.error("Error when sending packet", err)
+    }
+  });
+}
+
+sendTunerFrequencyToRadio(initialFrequencyMhz);
+
+console.log("finradio controller started");
 
