@@ -9,6 +9,7 @@ console.log("finradio controller starting");
 startDisplay();
 
 const initialFrequencyMhz = parseFloat(process.env.INITIAL_FREQUENCY_MHZ || 102.7);
+let currentFrequencyInMhz = initialFrequencyMhz;
 
 const yellowPin = process.env.YELLOW_GPIO_PIN || 26;
 const greenPin = process.env.GREEN_GPIO_PIN || 6;
@@ -25,6 +26,7 @@ let lasTunerValue = 0;
 dialListener.on('error', (err) => {
   console.log(`dialListener error:\n${err.stack}`);
   dialListener.close();
+  process.exit(1);
 });
 
 dialListener.on('message', (msg, rinfo) => {
@@ -50,36 +52,17 @@ dialListener.bind(8001);
 
 function receivedTunerValue(tunerValue) {
   console.log(`tunerValue: ${tunerValue} lasTunerValue: ${lasTunerValue}`);
-  const message = Buffer.alloc(1);
   if ( tunerValue === lasTunerValue ) {
     return;
   }
-  message[0] = tunerValue < lasTunerValue ? 4 : 5;
-
-  // command: 0
-  // payload = 4 bytes, a frequency as uint
-  // received does:
-  // unsigned int val = 0;
-
-	// for(i=1; i<5; i++) {
-	// 	val = val | ((buf[i]) << ((i-1)*8));
-	// }
-
+  const tuningDown = tunerValue < lasTunerValue;
   lasTunerValue = tunerValue;
-  if ( process.env.LOG_LEVEL="trace") {
-    console.log(`Sending message ${JSON.stringify(message)} to ${process.env.RADIO_HOSTNAME}:${process.env.RADIO_PORT}`);
-  }
-  clientSocket.send(message, process.env.RADIO_PORT, process.env.RADIO_HOSTNAME, (err) => {
-    if ( err ) {
-      console.error("Error when sending packet", err)
-    }
-  });
+  
+  currentFrequencyInMhz = currentFrequencyInMhz + ( tuningDown ? -0.2 : 0.2 );
+  sendTunerFrequencyToRadio(currentFrequencyInMhz);
+
   // LED Feedback
-  if ( message[0] == 4 ) {
-    flashLed(greenLed);
-  } else {
-    flashLed(yellowLed)
-  }
+  flashLed(tuningDown ? greenLed : yellowLed);
 }
 
 function flashLed(led) {
