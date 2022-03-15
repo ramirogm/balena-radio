@@ -1,7 +1,5 @@
 # FROM balenalib/%%BALENA_MACHINE_NAME%%-node:12-buster-build  OR bullseye instead of buster
 FROM balenalib/%%BALENA_MACHINE_NAME%%-node:16-bullseye-build
-ENV CACHE_BUSTER v.0.0.1
-
 
 # use `install_packages` if you need to install dependencies,
 # for instance if you need git, just uncomment the line below.
@@ -9,6 +7,17 @@ ENV CACHE_BUSTER v.0.0.1
 
 # RUN install_packages build-essential python-dev python-smbus python-pip git pigpio 
 # make gcc g++ 
+
+# Already installed
+# RUN install_packages i2c-tools
+
+ENV CACHE_BUSTER v.0.0.1
+
+# RUN insmod i2c-dev 
+
+# RUN i2cdetect -l
+
+# RUN i2cdetect -y 1
 
 # Defines our working directory in container
 WORKDIR /usr/src/app

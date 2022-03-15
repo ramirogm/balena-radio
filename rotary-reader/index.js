@@ -2,7 +2,7 @@ const Gpio = require('onoff').Gpio;
 const dgram = require('dgram');
 const { Buffer } = require('buffer');
 const { hrtime } = require('process');
-const nodaryEncoder = require('./nodaryEncoder');
+const nodaryEncoder = require('nodary-encoder');
 
 console.log("rotary reader starting");
 const clkPin = process.env.CLK_GPIO_PIN || 17;
@@ -11,7 +11,7 @@ const swPin = process.env.SW_GPIO_PIN || 22;
 
 console.log(`Pins: CLK: ${clkPin} DT: ${dtPin} SW: ${swPin}`);
 
-const myEncoder = nodaryEncoder(clkPin, dtPin); // Using GPIO17 & GPIO18
+const rotEncoder = nodaryEncoder(clkPin, dtPin); // Using GPIO17 & GPIO18
 
 const sw = new Gpio(swPin, 'in', 'falling', {debounceTimeout: 10});
 
@@ -21,10 +21,11 @@ let clicked = false;
 let lastClickTime = hrtime.bigint();
 
 /*
-RotaryKnob events processing logic that converts into a counter taken from 
-https://blog.sharedove.com/adisjugo/index.php/2020/05/10/using-ky-040-rotary-encoder-on-raspberry-pi-to-control-volume/
+RotaryKnob events processing logic that converts into a value
 
-Here we're using onoff: https://www.npmjs.com/package/onoff onoff relies on sysfs files located at /sys/class/gpio 
+
+Here we're using onoff: https://www.npmjs.com/package/onoff onoff relies on sysfs files located at /sys/class/gpio, 
+and https://github.com/smallab/nodary-encoder to read the encoder value
 For advanced GPIO, see https://www.npmjs.com/package/pigpio A wrapper for the pigpio C library to enable fast GPIO, PWM, servo control, state change notification and interrupt handling
 
 Others from the same author:
@@ -38,7 +39,7 @@ let paused = false // paused state
 let counter = 0;
 let swLastState = sw.readSync()
 
-myEncoder.on('rotation', (direction, value) => {
+rotEncoder.on('rotation', (direction, value) => {
   if (direction == 'R') {
     console.log('Encoder rotated right');
   } else {
