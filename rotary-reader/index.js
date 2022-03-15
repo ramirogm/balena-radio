@@ -2,7 +2,7 @@ const Gpio = require('onoff').Gpio;
 const dgram = require('dgram');
 const { Buffer } = require('buffer');
 const { hrtime } = require('process');
-const nodaryEncoder = require('./nodaryEncoder');
+const nodaryEncoder = require('nodary-encoder');
 
 console.log("rotary reader starting");
 const clkPin = process.env.CLK_GPIO_PIN || 17;
@@ -11,7 +11,7 @@ const swPin = process.env.SW_GPIO_PIN || 22;
 
 console.log(`Pins: CLK: ${clkPin} DT: ${dtPin} SW: ${swPin}`);
 
-const myEncoder = nodaryEncoder(clkPin, dtPin); // Using GPIO17 & GPIO18
+const rotEncoder = nodaryEncoder(clkPin, dtPin);
 
 const sw = new Gpio(swPin, 'in', 'falling', {debounceTimeout: 10});
 
@@ -38,7 +38,7 @@ let paused = false // paused state
 let counter = 0;
 let swLastState = sw.readSync()
 
-myEncoder.on('rotation', (direction, value) => {
+rotEncoder.on('rotation', (direction, value) => {
   if (direction == 'R') {
     console.log('Encoder rotated right');
   } else {
