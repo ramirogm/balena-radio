@@ -2,9 +2,9 @@
 // this is for monochrome screens
 // Mine ( https://articulo.mercadolibre.com.ar/MLA-743257264-pantalla-oled-display-096p-arduino-raspberry-arm-i2c-iic-se-_JM?quantity=1 )
 // is monochrome BUT it has the top +- 30 pixels yellow, and the rest blue
-
-// To try:
-// https://www.npmjs.com/package/oled-ssd1306-i2c
+//
+// Fonts: Get them from https://www.npmjs.com/package/oled-font-pack
+//
 
 
 var i2c = require('i2c-bus'),
