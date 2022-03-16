@@ -5,11 +5,13 @@ const { hrtime } = require('process');
 const nodaryEncoder = require('nodary-encoder');
 
 console.log("rotary reader starting");
-const clkPin = process.env.CLK_GPIO_PIN || 17;
-const dtPin = process.env.DT_GPIO_PIN || 27;
-const swPin = process.env.SW_GPIO_PIN || 22;
-
+const clkPin = process.env.RENC_CLK_GPIO_PIN || 17;
+const dtPin = process.env.RENC_DT_GPIO_PIN || 27;
+const swPin = process.env.RENC_SW_GPIO_PIN || 22;
 console.log(`Pins: CLK: ${clkPin} DT: ${dtPin} SW: ${swPin}`);
+
+const listenerPort = process.env.RENC_LISTENER_PORT | '8001';
+const listenerAddress = process.env.RENC_LISTENER_ADDRESS | 'localhost';
 
 const rotEncoder = nodaryEncoder(clkPin, dtPin);
 
@@ -47,33 +49,48 @@ rotEncoder.on('rotation', (direction, value) => {
   }
   if ( counter != value ) {
     counter = value;
-    sendCounterValue();
+    sendClickInfo(direction, value);
   }
 });
 
 
-function sendCounterValue() {
+function sendClickInfo(direction, value) {
+  counter = value;
   console.log("Counter ", counter);
-  checkSpeed();
-  const message = Buffer.from("[" + counter + "]");
-  clientSocket.send(message, process.env.LISTENER_PORT, process.env.LISTENER_ADDRESS, (err) => {
+  const lapseInMs = lapseFromLastClick();
+  const message = Buffer.alloc(9);
+  message.writeUint8(direction.charCodeAt(0), 0);
+  // const valueInBytes = intToByteArray(value);
+  // for ( let i = 0; i < 4; i++ ) {
+  //   message[i+1] = valueInBytes[i];
+  // }
+  // const lapseInBytes = intToByteArray(lapseInMs);
+  // for ( let i = 0; i < 4; i++ ) {
+  //   message[i+5] = lapseInBytes[i];
+  // }
+  message.writeInt32BE(value, 1);
+  message.writeInt32BE(lapseInMs, 5);
+  clientSocket.send(message, listenerPort, listnerAddress, (err) => {
     if ( err ) {
       console.error("Error when sending packet", err)
     }
   });
 }
 
-function checkSpeed() {
+function lapseFromLastClick() {
   if ( !clicked ) {
     clicked = true;
     lastClickTime = hrtime.bigint();
+    return 0;
   } else {
     const now = hrtime.bigint();
     const dif = now - lastClickTime;
     const difInt = Number(dif);
 
     lastClickTime = now;
-    console.log(`Time between clicks: ${difInt / 1000000 } milliseconds`);
+    const lapseInMs = difInt / 1000000;
+    console.log(`Time between clicks: ${lapseInMs} milliseconds`);
+    return lapseInMs;
   }
 }
 
@@ -100,5 +117,18 @@ console.log("rotary reader started");
 
 console.log("Initial sw:", swLastState);
 console.log("=========================================");
+
+function intToByteArray(intValue) {
+  // we want to represent the input as a 4-byte array
+  var byteArray = [0, 0, 0, 0];
+
+  for ( var index = 0; index < byteArray.length; index ++ ) {
+      var byte = intValue & 0xff;
+      byteArray [ index ] = byte;
+      intValue = (intValue - byte) / 256 ;
+  }
+
+  return byteArray;
+};
 
   
