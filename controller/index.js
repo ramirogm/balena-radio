@@ -4,6 +4,8 @@ const {
   startDisplay,
   displayFrequency
 } = require('./display');
+const loudness = require('loudness')
+
 
 console.log("finradio controller starting");
 startDisplay();
@@ -30,16 +32,12 @@ dialListener.on('error', (err) => {
 });
 
 dialListener.on('message', (msg, rinfo) => {
-  if ( process.env.LOG_LEVEL="trace") {
+  if ( process.env.LOG_LEVEL == "trace") {
     console.log(`dialListener got: ${msg} from ${rinfo.address}:${rinfo.port}`);
   }
-  const matches = msg.toString().match(/\[(.*)\]/);
-  if ( matches ) {
-    const value = parseInt(matches[1], 10);
-    if ( value != null ) { 
-      receivedTunerValue(value);
-    }
-  }
+  const {event, value, lapse} = decodeMessage(msg);
+  console.log(`decoded message. event: ${event} value: ${value} lapse: ${lapse}`);
+  receivedTunerValue(value);
 });
 
 dialListener.on('listening', () => {
@@ -48,7 +46,6 @@ dialListener.on('listening', () => {
 });
 
 dialListener.bind(8001);
-// Prints: dialListener listening 0.0.0.0:41234
 
 function receivedTunerValue(tunerValue) {
   console.log(`tunerValue: ${tunerValue} lasTunerValue: ${lasTunerValue}`);
@@ -72,9 +69,9 @@ function flashLed(led) {
   }, 10);
 }
 
-
+// FIXME use a node.js-provided function
 function intToByteArray(intValue) {
-  // we want to represent the input as a 4-bytes array
+  // we want to represent the input as a 4-byte array
   var byteArray = [0, 0, 0, 0];
 
   for ( var index = 0; index < byteArray.length; index ++ ) {
@@ -86,6 +83,14 @@ function intToByteArray(intValue) {
   return byteArray;
 };
 
+
+function decodeMessage(buffer) {
+  let event, value, lapse;
+  event = buffer[0];
+  value = buffer.readInt32BE(1);
+  lapse = buffer.readInt32BE(5);
+  return { event, value, lapse};
+}
 
 function sendTunerFrequencyToRadio(freqInMhz) {
   displayFrequency(freqInMhz);
@@ -109,6 +114,16 @@ function sendTunerFrequencyToRadio(freqInMhz) {
 }
 
 sendTunerFrequencyToRadio(initialFrequencyMhz);
+
+async function checkVol() {
+  const vol = await loudness.getVolume()
+  console.log(`Current volume: ${vol}`);
+  await loudness.setVolume(45);
+}
+
+// disabled because amixer error
+// checkVol();
+
 
 console.log("finradio controller started");
 

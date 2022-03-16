@@ -15,16 +15,16 @@ services:
       - RADIO_PORT=6020
       - GREEN_GPIO_PIN=6
       - YELLOW_GPIO_PIN=26
-      - INITIAL_FREQUENCY_MHZ=92.1
+      - INITIAL_FREQUENCY_MHZ=107.5
   rotary-reader:
     build: ./rotary-reader
     privileged: true
     environment: 
-      - LISTENER_ADDRESS=controller
-      - LISTENER_PORT=8001
-      - CLK_GPIO_PIN=17
-      - DT_GPIO_PIN=27
-      - SW_GPIO_PIN=22
+      - RENC_LISTENER_ADDRESS=controller
+      - RENC_LISTENER_PORT=8001
+      - RENC_CLK_GPIO_PIN=17
+      - RENC_DT_GPIO_PIN=27
+      - RENC_SW_GPIO_PIN=22
   # fbcp:
   #   image: balenablocks/fbcp
   #   privileged: true
