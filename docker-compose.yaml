@@ -9,15 +9,16 @@ services:
     build: ./controller
     privileged: true
     expose:
-      - "8001"
+      - "8001"  # tuning-knob
+      - "8002"  # volume-knob
     environment:
       - RADIO_HOSTNAME=radio-player
       - RADIO_PORT=6020
       - GREEN_GPIO_PIN=6
       - YELLOW_GPIO_PIN=26
-      - INITIAL_FREQUENCY_MHZ=107.5
-  rotary-reader:
-    build: ./rotary-reader
+      - INITIAL_FREQUENCY_MHZ=101.9
+  tuning-knob:
+    image: ramirogmbalena/rotary-reader:raspberrypi4-64-latest  # See available tags at https://hub.docker.com/repository/docker/ramirogmbalena/rotary-reader/tags?page=1&ordering=last_updated
     privileged: true
     environment: 
       - RENC_LISTENER_ADDRESS=controller
@@ -25,6 +26,15 @@ services:
       - RENC_CLK_GPIO_PIN=17
       - RENC_DT_GPIO_PIN=27
       - RENC_SW_GPIO_PIN=22
+  volume-knob:  # You could create more than one if needed
+    image: ramirogmbalena/rotary-reader:raspberrypi4-64-latest  # See available tags at https://hub.docker.com/repository/docker/ramirogmbalena/rotary-reader/tags?page=1&ordering=last_updated
+    privileged: true
+    environment: 
+      - RENC_LISTENER_ADDRESS=app  # see the app container
+      - RENC_LISTENER_PORT=8002  # see the app container
+      - RENC_CLK_GPIO_PIN=25
+      - RENC_DT_GPIO_PIN=5
+      - RENC_SW_GPIO_PIN=16
   # fbcp:
   #   image: balenablocks/fbcp
   #   privileged: true

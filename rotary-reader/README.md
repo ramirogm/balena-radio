@@ -27,11 +27,9 @@ To use this image, create a container in your `docker-compose.yml` file as shown
 
 ```yaml
 version: '2'
-
 services:
-
   rotary-reader:  # You could create more than one if needed
-    image: ramirogmbalena/raspberrypi4-64-latest  # See available tags at https://hub.docker.com/repository/docker/ramirogmbalena/rotary-reader/tags?page=1&ordering=last_updated
+    image: ramirogmbalena/rotary-reader:raspberrypi4-64-latest  # See available tags at https://hub.docker.com/repository/docker/ramirogmbalena/rotary-reader/tags?page=1&ordering=last_updated
     privileged: true
     environment: 
       - RENC_LISTENER_ADDRESS=app  # see the app container
@@ -39,7 +37,7 @@ services:
       - RENC_CLK_GPIO_PIN=17
       - RENC_DT_GPIO_PIN=27
       - RENC_SW_GPIO_PIN=22
-
+      - LOG_ENABLED=1   # any value != 1 turns off the logging to console
   app:
     build: ./app
     expose:
@@ -86,8 +84,8 @@ This block is a node.js app that uses two libraries to read the events,  `nodary
 
 ## TO DO
 
+- Add a bit of debounce. Would need to fork nodary-encoder to add this parameter to the constructor
 - Provide a Unix socket alternative, just in case we don't want to use IP
-
 
 
 ## Configuration

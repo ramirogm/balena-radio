@@ -22,6 +22,7 @@ const greenLed = new Gpio(greenPin, 'out');
 
 const dialListener = dgram.createSocket('udp4');
 const clientSocket = dgram.createSocket('udp4');
+const volumeListener = dgram.createSocket('udp4');
 
 let lasTunerValue = 0;
 
@@ -36,8 +37,8 @@ dialListener.on('message', (msg, rinfo) => {
     console.log(`dialListener got: ${msg} from ${rinfo.address}:${rinfo.port}`);
   }
   const {event, value, lapse} = decodeMessage(msg);
-  console.log(`decoded message. event: ${event} value: ${value} lapse: ${lapse}`);
-  receivedTunerValue(value);
+  console.log(`dialListener decoded message. event: ${event} value: ${value} lapse: ${lapse}`);
+  receivedTunerEvent(event, value);
 });
 
 dialListener.on('listening', () => {
@@ -47,8 +48,20 @@ dialListener.on('listening', () => {
 
 dialListener.bind(8001);
 
-function receivedTunerValue(tunerValue) {
-  console.log(`tunerValue: ${tunerValue} lasTunerValue: ${lasTunerValue}`);
+function receivedTunerEvent(event, tunerValue) {
+  console.log(`event: ${event} tunerValue: ${tunerValue} lasTunerValue: ${lasTunerValue}`);
+  if ( event == "C" ) {
+    // dial knob push button pushed
+    lasTunerValue = tunerValue;
+    
+    currentFrequencyInMhz = initialFrequencyMhz;
+    sendTunerFrequencyToRadio(currentFrequencyInMhz);
+  
+    // LED Feedback
+    flashLed(yellowLed);
+    flashLed(greenLed);
+    return;
+  }
   if ( tunerValue === lasTunerValue ) {
     return;
   }
@@ -123,6 +136,25 @@ async function checkVol() {
 
 // disabled because amixer error
 // checkVol();
+
+volumeListener.on('error', (err) => {
+  console.log(`volumeListener error:\n${err.stack}`);
+  volumeListener.close();
+  process.exit(1);
+});
+
+volumeListener.on('message', (msg, rinfo) => {
+  const {event, value, lapse} = decodeMessage(msg);
+  console.log(`volumeListener decoded message. event: ${event} value: ${value} lapse: ${lapse}`);
+});
+
+volumeListener.on('listening', () => {
+  const address = volumeListener.address();
+  console.log(`volumeListener listening ${address.address}:${address.port}`);
+});
+
+volumeListener.bind(8002);
+
 
 
 console.log("finradio controller started");
