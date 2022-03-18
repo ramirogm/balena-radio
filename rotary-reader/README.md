@@ -85,7 +85,6 @@ This block is a node.js app that uses two libraries to read the events,  `nodary
 ## TO DO
 
 - Add a bit of debounce. Would need to fork nodary-encoder to add this parameter to the constructor
-- Provide a Unix socket alternative, just in case we don't want to use IP
 
 
 ## Configuration
@@ -99,7 +98,7 @@ The rotary-reader works with the following environment variables:
 | RENC_CLK_GPIO_PIN| GPIO pin where the rotary encoder CLK pin is wired to | 17 |
 | RENC_DT_GPIO_PIN| Same for the DT pin| 27 |
 | RENC_SW_GPIO_PIN| Same for the SW pin| 22 |
-
+| LOG_ENABLED| Log to console if == 1 | null ( no logging )
 
 
 ## References

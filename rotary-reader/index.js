@@ -9,6 +9,11 @@ Others from the same author:
 https://github.com/fivdi/i2c-bus
 https://github.com/fivdi/spi-device
 https://github.com/fivdi/mcp-spi-adc
+
+
+Note on how the reader is implemented from a source of nodary-encoder: https://github.com/nstansby/rpi-rotary-encoder-python
+
+
 */
 
 const Gpio = require('onoff').Gpio;
@@ -19,15 +24,16 @@ const nodaryEncoder = require('nodary-encoder');
 
 const CLICKED_EVENT = "C";
 
-const logEnabled = "1" != process.env.LOG_ENABLED;
+const logEnabled = "1" === process.env.LOG_ENABLED;
 const clkPin = process.env.RENC_CLK_GPIO_PIN || 17;
 const dtPin = process.env.RENC_DT_GPIO_PIN || 27;
 const swPin = process.env.RENC_SW_GPIO_PIN || 22;
-const listenerPort = process.env.RENC_LISTENER_PORT | '8001';
-const listenerAddress = process.env.RENC_LISTENER_ADDRESS | 'localhost';
+const listenerPort = process.env.RENC_LISTENER_PORT || '8001';
+const listenerAddress = process.env.RENC_LISTENER_ADDRESS || 'localhost';
 
 logEnabled && console.log("rotary reader starting");
 logEnabled && console.log(`Pins: CLK: ${clkPin} DT: ${dtPin} SW: ${swPin}`);
+logEnabled && console.log(`listener: listenerAddress: ${listenerAddress} listenerPort: ${listenerPort}`);
 
 const rotEncoder = nodaryEncoder(clkPin, dtPin);
 const sw = new Gpio(swPin, 'in', 'falling', {debounceTimeout: 10});
