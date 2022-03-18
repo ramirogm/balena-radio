@@ -25,6 +25,7 @@ const clientSocket = dgram.createSocket('udp4');
 const volumeListener = dgram.createSocket('udp4');
 
 let lasTunerValue = 0;
+let currentVolume = 0;
 
 dialListener.on('error', (err) => {
   console.log(`dialListener error:\n${err.stack}`);
@@ -50,7 +51,7 @@ dialListener.bind(8001);
 
 function receivedTunerEvent(event, tunerValue) {
   console.log(`event: ${event} tunerValue: ${tunerValue} lasTunerValue: ${lasTunerValue}`);
-  if ( event == "C" ) {
+  if ( event == 67 ) {
     // dial knob push button pushed
     lasTunerValue = tunerValue;
     
@@ -132,11 +133,10 @@ sendTunerFrequencyToRadio(initialFrequencyMhz);
 async function checkVol() {
   const vol = await loudness.getVolume()
   console.log(`Current volume: ${vol}`);
-  await loudness.setVolume(45);
+  currentVolume = vol;
 }
 
-// disabled because amixer error
-// checkVol();
+checkVol();
 
 volumeListener.on('error', (err) => {
   console.log(`volumeListener error:\n${err.stack}`);
@@ -147,6 +147,12 @@ volumeListener.on('error', (err) => {
 volumeListener.on('message', (msg, rinfo) => {
   const {event, value, lapse} = decodeMessage(msg);
   console.log(`volumeListener decoded message. event: ${event} value: ${value} lapse: ${lapse}`);
+  if ( event != 67 ) {
+    const delta = event == 76 ? -2 : 2; 
+    currentVolume = Math.max(0,Math.min(currentVolume + delta,100));
+    console.log(`setting volume to: ${currentVolume}%`);
+    loudness.setVolume(currentVolume);
+  }
 });
 
 volumeListener.on('listening', () => {
