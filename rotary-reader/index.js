@@ -36,7 +36,7 @@ logEnabled && console.log(`Pins: CLK: ${clkPin} DT: ${dtPin} SW: ${swPin}`);
 logEnabled && console.log(`listener: listenerAddress: ${listenerAddress} listenerPort: ${listenerPort}`);
 
 const rotEncoder = nodaryEncoder(clkPin, dtPin);
-const sw = new Gpio(swPin, 'in', 'falling', {debounceTimeout: 10});
+const sw = new Gpio(swPin, 'in', 'raising'); // , {debounceTimeout: 10}
 
 const clientSocket = dgram.createSocket('udp4');
 

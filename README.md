@@ -119,10 +119,7 @@ All you need to do is click the deploy button below:
 
 [![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/ramirogm/finradio)
 
-## Deploying the fleet
-
-<!--
-You will then be lead to creating a fleet in the balena dashboard. Choose `Raspberry Pi 3 or 4B` as the default device type and then click `advanced` to further detail the configuration of the fleet. The [Usage and Customization](#usage-and-customization) section will explain all of the variables you see in the advanced page. You can change these values later on if you want to create the fleet first and worry about the configuration later.
+You will then be lead to creating a fleet in the balena dashboard. Choose `Raspberry Pi 3 or 4B` as the default device type and then click `advanced` to further detail the configuration of the fleet. Below there is a section that explains all of the variables you see in the advanced page. You can change these values later on if you want to create the fleet first and worry about the configuration later.
 
 ![deploy-fleet](./images/deploy-fleet.png)
 
@@ -136,15 +133,12 @@ Now, it's time to add your device(s) to the fleet. Press `add device` on the das
 
 Insert the newly flashed SD card to your device, turn it on, and you should see it in the dashboard in a few minutes.
 
-![deploy-sd](./images/deploy-sd.gif)
-
--->
-
-
+If you're using a `balenaFin` you can flash directly from balena Etcher to the fin. Once you do that and after you reboot the device you'll see it added to the fleet ![balena-fin-added.png](./images/balena-fin-added.png)
 
 
 
 ## Hardware alternatives
+
 
 ### No rotary knobs
 

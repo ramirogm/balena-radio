@@ -1,10 +1,12 @@
-version: '2'
+version: '2.1'
 services:
   radio-player:
     build: ./radio-player
     privileged: true
     expose:
       - "6020"
+    environment:
+      - RADIO_ENABLED=1
   controller:
     build: ./controller
     privileged: true
@@ -17,8 +19,10 @@ services:
       - GREEN_GPIO_PIN=6
       - YELLOW_GPIO_PIN=26
       - INITIAL_FREQUENCY_MHZ=101.9
+      # I2C|NONE
+      - DISPLAY_TYPE=I2C
   tuning-knob:
-    image: ramirogmbalena/rotary-reader:raspberrypi4-64-latest  # See available tags at https://hub.docker.com/repository/docker/ramirogmbalena/rotary-reader/tags?page=1&ordering=last_updated
+    image: bhcr.io/ramiro_gonzalez/rotary-knob
     privileged: true
     environment: 
       - RENC_LISTENER_ADDRESS=controller
@@ -27,8 +31,8 @@ services:
       - RENC_DT_GPIO_PIN=27
       - RENC_SW_GPIO_PIN=22
       - LOG_ENABLED=1
-  volume-knob:  # You could create more than one if needed
-    image: ramirogmbalena/rotary-reader:raspberrypi4-64-latest  # See available tags at https://hub.docker.com/repository/docker/ramirogmbalena/rotary-reader/tags?page=1&ordering=last_updated
+  volume-knob:
+    image: bhcr.io/ramiro_gonzalez/rotary-knob 
     privileged: true
     environment: 
       - RENC_LISTENER_ADDRESS=controller  # see the app container

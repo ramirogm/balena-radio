@@ -5,10 +5,10 @@ const {
   displayFrequency
 } = require('./display');
 const loudness = require('loudness')
-
+const displayType = process.env.DISPLAY_TYPE || "NONE";
 
 console.log("finradio controller starting");
-startDisplay();
+( displayType != "NONE" ) && startDisplay();
 
 const initialFrequencyMhz = parseFloat(process.env.INITIAL_FREQUENCY_MHZ || 102.7);
 let currentFrequencyInMhz = initialFrequencyMhz;
@@ -108,7 +108,7 @@ function decodeMessage(buffer) {
 }
 
 function sendTunerFrequencyToRadio(freqInMhz) {
-  displayFrequency(freqInMhz);
+  ( displayType != "NONE" ) && displayFrequency(freqInMhz);
   const message = Buffer.alloc(5);
   message[0] = 0; // Means set frequency
 

@@ -100,7 +100,11 @@ RUN echo -e "\n# for RTL-SDR:\nblacklist dvb_usb_rtl28xxu\n" >> /etc/modprobe.d/
 
 # -V1 : Only error messages are shown. These are generated if SoX cannot complete the requested commands.
 # 
-CMD rtl_udp -f 102.7M -W | play -t raw -r 32k -es -b 16 -c 1 -V1 --no-show-progress -
+CMD echo RADIO_ENABLED $RADIO_ENABLED ; if [ "$RADIO_ENABLED" = "1" ]; then \
+        ( rtl_udp -f 102.7M -W | play -t raw -r 32k -es -b 16 -c 1 -V1 --no-show-progress - );  \
+    else \
+        echo "Radio disabled, idling" && balena-idle; \
+    fi
 		# "\t[-W enables WBFM mode (default: off)]\n"
 		# "\t (-N -s 170k -o 4 -A fast -r 32k -l 0 -D)\n"
 
