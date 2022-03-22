@@ -1,0 +1,32 @@
+name: finradio
+description: >-
+  Create a Radio Tuner with a PI + a SDR USB dongle
+version: 0.1.1
+type: sw.application
+joinable: false
+post-provisioning: >-
+  Check out [finradio's Readme](https://github.com/ramirogm/finradio/blob/main/README.md).
+assets:
+  repository:
+    type: blob.asset
+    data:
+      url: 'https://github.com/ramirogm/finradio'
+  logo:
+    type: blob.asset
+    data:
+      url: >-
+        https://raw.githubusercontent.com/ramirogm/finradio/main/images/circle-icons-radio.png
+data:
+  applicationEnvironmentVariables:
+    - RADIO_ENABLED: 1
+    - GREEN_GPIO_PIN: 6
+    - YELLOW_GPIO_PIN: 26
+    - INITIAL_FREQUENCY_MHZ: 101.9
+    - DISPLAY_TYPE: I2C
+  defaultDeviceType: raspberrypi4-64
+  supportedDeviceTypes:
+    - raspberry-pi
+    - raspberry-pi2
+    - raspberrypi3
+    - raspberrypi3-64
+    - raspberrypi4-64
