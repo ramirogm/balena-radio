@@ -4,9 +4,9 @@ const { hrtime } = require('process');
 const readline = require('readline');
 
 
-const listenerPort = process.env.LISTENER_PORT || '8001';
 const listenerAddress = process.env.LISTENER_ADDRESS || 'localhost';
-const logEnabled = "1" === process.env.LOG_ENABLED || true;
+const listenerPort = process.env.LISTENER_PORT || '8001';
+const logEnabled = "1" === process.env.LOG_ENABLED;
 const delta = 1;
 
 const clientSocket = dgram.createSocket('udp4');
@@ -17,8 +17,14 @@ let lastClickTime = hrtime.bigint();
 let counter = 0;
 
 readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
+if (process.stdin.isTTY) {
+  process.stdin.setRawMode(true);
+}
 
+// Begin reading from stdin so the process does not exit(?).
+// process.stdin.resume();
+
+console.log(`keyreader starting listenerAddress: ${listenerAddress} listenerPort: ${listenerPort} logEnabled: ${logEnabled} leftKey: ${process.env.LEFT_KEY} rightKey: ${process.env.RIGHT_KEY} pushKey: ${process.env.PUSH_KEY}`);
 
 process.stdin.on('keypress', (str, key) => {
   logEnabled && console.log(`keypress key: ${key}`);

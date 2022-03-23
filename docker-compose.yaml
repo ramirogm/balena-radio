@@ -32,15 +32,20 @@ services:
       - RENC_SW_GPIO_PIN=22
       - LOG_ENABLED=1
   tuning-keyreader:
-    build: ./keyreader      
+    build: ./keyreader-usb      
     privileged: true
+    stdin_open: true # docker run -i
+    tty: true
     environment: 
       - LISTENER_ADDRESS=controller  # see the app container
       - LISTENER_PORT=8001  # see the app container
-      - LEFT_KEY=left
-      - RIGHT_KEY=right
-      - PUSH_KEY=space
-      - LOG_ENABLED=1
+      - LEFT_KEY=a
+      - RIGHT_KEY=d
+      - PUSH_KEY=z
+      - LOG_ENABLED=0
+      - VENDOR_ID=05ac
+      - PRODUCT_ID=020b
+      # Bus 001 Device 006: ID 05ac:020b Apple, Inc. Pro Keyboard [Mitsumi, A1048/US layout]
   volume-knob:
     image: bhcr.io/ramiro_gonzalez/rotary-knob 
     privileged: true
@@ -52,15 +57,17 @@ services:
       - RENC_SW_GPIO_PIN=16
       - LOG_ENABLED=1
   volume-keyreader:
-    build: ./keyreader      
+    build: ./keyreader-usb      
     privileged: true
     environment: 
       - LISTENER_ADDRESS=controller  # see the app container
       - LISTENER_PORT=8002  # see the app container
-      - LEFT_KEY=down
-      - RIGHT_KEY=up
-      - PUSH_KEY=w
-      - LOG_ENABLED=1
+      - LEFT_KEY=s
+      - RIGHT_KEY=w
+      - PUSH_KEY=x
+      - LOG_ENABLED=0
+      - VENDOR_ID=05ac
+      - PRODUCT_ID=020b
 
 
   # fbcp:
