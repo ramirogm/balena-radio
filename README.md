@@ -145,17 +145,21 @@ If you only got the SDR or are missing some pieces here are some alternatives.
 
 ### No rotary knobs
 
-If you want to run the FinRadio without rotary knobs, then you could use the keyboard to change the tuning frequency and the volume
+If you want to run the FinRadio without rotary knobs, then you can use the keyboard to change the tuning frequency and the volume.
 
-To do this, comment out the entries for `tuning-knob` and `volume-knob` and uncomment the entry for `keyreader`.
+Key assignments:
 
-**FIXME add this container**
+| Key | Function |
+|:---|:----|
+| a | Tune down |
+| d | Tune up |
+| s | Volume down |
+| w | Volume up |
+
 
 ### No LED feedback pins
 
 Nothing will break. Just be sure that the output pins are not connected to anything that may break!
-
-
 
 ## Usage and Customization
 
