@@ -31,6 +31,16 @@ services:
       - RENC_DT_GPIO_PIN=27
       - RENC_SW_GPIO_PIN=22
       - LOG_ENABLED=1
+  tuning-keyreader:
+    build: ./keyreader      
+    privileged: true
+    environment: 
+      - LISTENER_ADDRESS=controller  # see the app container
+      - LISTENER_PORT=8001  # see the app container
+      - LEFT_KEY=left
+      - RIGHT_KEY=right
+      - PUSH_KEY=space
+      - LOG_ENABLED=1
   volume-knob:
     image: bhcr.io/ramiro_gonzalez/rotary-knob 
     privileged: true
@@ -41,6 +51,18 @@ services:
       - RENC_DT_GPIO_PIN=5
       - RENC_SW_GPIO_PIN=16
       - LOG_ENABLED=1
+  volume-keyreader:
+    build: ./keyreader      
+    privileged: true
+    environment: 
+      - LISTENER_ADDRESS=controller  # see the app container
+      - LISTENER_PORT=8002  # see the app container
+      - LEFT_KEY=down
+      - RIGHT_KEY=up
+      - PUSH_KEY=w
+      - LOG_ENABLED=1
+
+
   # fbcp:
   #   image: balenablocks/fbcp
   #   privileged: true
