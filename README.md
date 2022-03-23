@@ -1,10 +1,10 @@
 # finradio
 
-With this app plus a Raspberry Pi and a RTL-SDR dobgle you can build a Radio Receiver to listen to FM Radio.
+With this app plus a Raspberry Pi and a [RTL-SDR](https://www.rtl-sdr.com/) compatible USB dongle you can build a Radio Receiver to listen to FM Radio.
 
 This app is the software side of FinRadio, a radio tuner with rotary knobs used to change the tuning frequency and output volume, and a small display that shows the current frequency.
 
-As a minimum you need a Raspberry Pi + a SDR dongle, and you can use the keyboard to change the tuning frequency and output volume.
+As a minimum you need a Raspberry Pi + a SDR (Software-Defined Radio) dongle, speakers, and a keyboar to use to to change the tuning frequency and output volume.
 
 This project was done during the balenaLabs residency program. You can see more details in [the forum post I kept during the project](https://forums.balena.io/t/finradio-a-balenalabs-residency-project/354030/17)
 
@@ -28,22 +28,24 @@ The volume and tuning knobs are handled with a pair of [rotary-knob blocks](http
 
 ## Running the full version
 
-Bill of materials:
+Bill of materials ( note that the links I've added are from the devices I've tested, and as you'll see they're from local sellers in Argentina ):
 
-* 2 rotary knobs
+* A SDR receiver. I use mainly a [NooElec NESDR SMArt HF Bundle](https://www.amazon.com/-/es/Nooelec-NESDR-Smart-HF-Bundle/dp/B0747PX3NZ/ref=sr_1_5?__mk_es_US=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=HAFBTX414EUU&keywords=nooelec+nesdr+smart&qid=1647996086&sprefix=nooelec+nesdr+smart+hf+bundle%2Caps%2C227&sr=8-5&language=en_US). I also bought a [cheap USB dongle](https://articulo.mercadolibre.com.ar/MLA-797334923-receptor-sdr-chip-rtl2832u-r820t2-radioescucha-25mhz-a-2ghz-_JM?quantity=1) and it works perfectly. Note that if you plug this in you can't plug an Ethernet cable on a Pi as the sockets are too close - The [nooelecs](https://www.amazon.com/-/es/Nooelec-NESDR-Smart-v4-SDR/dp/B01HA642SW/ref=sr_1_4?__mk_es_US=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=30THJ5CEUIBWD&keywords=SDR&qid=1647996075&refresh=1&sprefix=sdr%2Caps%2C248&sr=8-4) don't have this problem.
+* 2 rotary knobs. I have a pair of [Ky-040](https://articulo.mercadolibre.com.ar/MLA-869711164-modulo-encoder-rotativo-ky-040-20-vueltas-arduino-unoelectro-_JM?quantity=2) rotary encoders.
+* 2 Nicely looking knobs. [I got these in black](https://articulo.mercadolibre.com.ar/MLA-696351558-perilla-potenciometro-knob-15x17-dorada-negra-_JM?quantity=4)
 * 2 LEDs, one yellow, one green
 * 2 resistors to avoid blowing up the LEDs
-* 1 SSD1306 controlled OLED 128x64 display. See options below if you want to use something different
-* Some kind of speakers connected to the Audio jack on the Raspberry Pi. Don't forget to turn the speakers on!.
+* 1 SSD1306 controlled OLED 128x64 display. I got a beautiful [one that displays the top 20-something rows in yellow and the rest in a shiny blue](https://articulo.mercadolibre.com.ar/MLA-743257264-pantalla-oled-display-096p-arduino-raspberry-arm-i2c-iic-se-_JM?quantity=1). See options below if you want to use something different
+* Some kind of speakers connected to the Audio jack on the Raspberry Pi. Don't forget to turn the speakers on!. [I bought this pair and they're small and sound ok](https://articulo.mercadolibre.com.ar/MLA-775450895-parlantes-pc-computadora-notebook-netbook-tablet-noga-ng-106-_JM?quantity=1&variation_id=47840885316) I also bought [a pair of Logitechs which are a little bigger](https://www.mercadolibre.com.ar/parlante-logitech-z120-negro-y-blanco/p/MLA15931818?pdp_filters=item_id:MLA910491293) but have fuller sound.
 
-And a supported device:
+You also need a supported device:
 
 <table>
   <tr>
     <td>
 <img height="24px" src="https://files.balena-cloud.com/images/fincm3/2.58.3%2Brev1.prod/logo.svg" alt="fincm3" style="max-width: 100%; margin: 0px 4px;"></td>
     <td> balenaFin</td>
-    <td>You'd need to add an USB sound card to be able to play through an Audio Jack</td>
+    <td>You'd need to add an USB sound card to be able to play through an Audio Jack. Something like <a href="https://www.adafruit.com/product/1475">this sound board</a> or even one <a href="https://www.adafruit.com/product/3369">with speakers</a>. Note that I haven't tested any of these</td>
   </tr>
 <tr><td>
 <img height="24px" src="https://files.balena-cloud.com/images/raspberrypi3/2.58.3%2Brev1.prod/logo.svg" alt="raspberrypi3" style="max-width: 100%; margin: 0px 4px;"></td><td>Raspberry Pi 3 Model B+</td>
@@ -139,6 +141,7 @@ If you're using a `balenaFin` you can flash directly from balena Etcher to the f
 
 ## Hardware alternatives
 
+If you only got the SDR or are missing some pieces here are some alternatives.
 
 ### No rotary knobs
 
@@ -150,15 +153,11 @@ To do this, comment out the entries for `tuning-knob` and `volume-knob` and unco
 
 ### No LED feedback pins
 
-I think this works ok, it will output signals but nothing connected to the GPIO pints  **FIXME**
+Nothing will break. Just be sure that the output pins are not connected to anything that may break!
 
 
 
 ## Usage and Customization
-
-### Customizing variables
-
-
 
 ### List of all environment variables
 
@@ -174,8 +173,26 @@ To edit these values in the dashboard, simply press `Variables` on the left colu
 | DISPLAY_TYPE | Must be I2C or NONE | I2C |
 
 
-### environment variables that have to be changed through docker-compose
+### Environment variables that have to be changed through docker-compose
 
 If you want to change the Tuning and Volume rotary knob pinouts, the you'd need to edit the `docker-compose.yaml`
+
+Why is this? The app uses two instances of the `rotary knob` block and currently there's no way two map two different fleet variables to the same variable name, one on each container.
+
+# Credits
+
+- A key component of the app is the [rtl_fm](http://kmkeen.com/rtl-demod-guide/) program that is included in the rtl-sdr package. I'm actually using a fork that called [rtl_udp](./../sysrun__rtl-sdr/README.md): _rtl_udp is a copy of rtl_fm with a special feature: It opens a udp control port (currently fixed to 6020) which takes commands like changing the frequency or mode. No need to restart :)_
+
+- References! While looking for ideas and references for my project I found or was told about these excellent related projects:
+
+  * SDR: An spectrum visualization https://hub.balena.io/gh_jaomaloy/balena-rtl-power by Jao Maloloy-on `@jaomaloy`
+
+  * A flight traffic app on Hub here: https://hub.balena.io/ketil/balena-ads-b
+
+  * A Pi **transmitter** Cool if you want to broadcast FM from an audio source! https://hub.balena.io/grokbeer/rickroll-fm https://github.com/grokbeer/rickroll-fm
+
+  * Alan Boris @alab128 did a great project that allows you to use OpenWebRX to listen to some frequencies and visualize the radio spectrum, packed as a balena app https://www.balena.io/blog/running-openwebrx-on-balena-to-remotely-monitor-local-radio-spectrum/
+
+  * WAT!! A "Sound cabinet" https://balenaltd.io/rosswesleyporter/blog/make-the-extra-small-model/ This is excellent and beautiful, a cabinet where we can put the Pi. I could use this or an old radio. Or make two and use both!.
 
 
