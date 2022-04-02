@@ -157,6 +157,41 @@ Key assignments:
 | w | Volume up |
 
 
+You need to set the environment variables so that the app knows where to read the keypresses from.
+
+To get the id, plugin the keyboard, connect a terminal to the `controller` container and run `lsusb`. Example:
+
+```log
+Connecting to 9cf53107314f3cb2e482e2594c710116...
+Spawning shell...
+root@bf3b12b834c4:/usr/src/app# lsusb
+Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+Bus 001 Device 006: ID 05ac:020b Apple, Inc. Pro Keyboard [Mitsumi, A1048/US layout]
+Bus 001 Device 005: ID 05ac:1003 Apple, Inc. Hub in Pro Keyboard [Mitsumi, A1048]
+Bus 001 Device 004: ID 0bda:2838 Realtek Semiconductor Corp. RTL2838 DVB-T
+Bus 001 Device 003: ID 045e:0745 Microsoft Corp. Nano Transceiver v1.0 for Bluetooth
+Bus 001 Device 002: ID 2109:3431 VIA Labs, Inc. Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+root@0b469551c9b8:/usr/src/app# 
+```
+
+Then update the values of `VENDOR_ID` and `PRODUCT_ID` ; on this example we'd set:
+
+```yaml
+- VENDOR_ID=05ac
+- PRODUCT_ID=020b
+```      
+
+root@0b469551c9b8:/usr/src/app# lsusb
+Bus 001 Device 008: ID 0bda:2838 Realtek Semiconductor Corp. RTL2838 DVB-T
+Bus 001 Device 007: ID 04d8:eed2 Microchip Technology, Inc. CTRL Keyboard
+Bus 001 Device 006: ID 04d8:eec5 Microchip Technology, Inc. Massdrop Hub
+Bus 001 Device 004: ID 0403:6010 Future Technology Devices International, Ltd FT2232C/D/H Dual UART/FIFO IC
+Bus 001 Device 003: ID 0424:ec00 Microchip Technology, Inc. (formerly SMSC) SMSC9512/9514 Fast Ethernet Adapter
+Bus 001 Device 002: ID 0424:9514 Microchip Technology, Inc. (formerly SMSC) SMC9514 Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+
 ### No LED feedback pins
 
 Nothing will break. Just be sure that the output pins are not connected to anything that may break!
