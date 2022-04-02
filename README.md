@@ -1,8 +1,8 @@
-# finradio
+# balenaRadio
 
 With this app plus a Raspberry Pi and a [RTL-SDR](https://www.rtl-sdr.com/) compatible USB dongle you can build a Radio Receiver to listen to FM Radio.
 
-This app is the software side of FinRadio, a radio tuner with rotary knobs used to change the tuning frequency and output volume, and a small display that shows the current frequency.
+This app is the software side of balenaRadio, a radio tuner with rotary knobs used to change the tuning frequency and output volume, and a small display that shows the current frequency.
 
 As a minimum you need a Raspberry Pi + a SDR (Software-Defined Radio) dongle, speakers, and a keyboar to use to to change the tuning frequency and output volume.
 
@@ -119,7 +119,7 @@ If you see a unicorn then we're good! And after a minute or two you should be li
 
 All you need to do is click the deploy button below:
 
-[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/ramirogm/finradio)
+[![balena deploy button](https://www.balena.io/deploy.svg)](https://dashboard.balena-cloud.com/deploy?repoUrl=https://github.com/ramirogm/balena-radio)
 
 You will then be lead to creating a fleet in the balena dashboard. Choose `Raspberry Pi 3 or 4B` as the default device type and then click `advanced` to further detail the configuration of the fleet. Below there is a section that explains all of the variables you see in the advanced page. You can change these values later on if you want to create the fleet first and worry about the configuration later.
 
@@ -145,7 +145,7 @@ If you only got the SDR or are missing some pieces here are some alternatives.
 
 ### No rotary knobs
 
-If you want to run the FinRadio without rotary knobs, then you can use the keyboard to change the tuning frequency and the volume.
+If you want to run the balenaRadio without rotary knobs, then you can use the keyboard to change the tuning frequency and the volume.
 
 Key assignments:
 
